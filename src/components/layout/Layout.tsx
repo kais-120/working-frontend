@@ -12,7 +12,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
   const cookie = new Cookies();
-  const token = cookie.get("auth")
 
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -148,55 +147,67 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </div>
 
         {/* Mobile Navigation */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white shadow-lg animate-fade-in">
-            <div className="container-custom py-4 flex flex-col gap-4">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  className={`block py-2 text-base font-medium transition-colors hover:text-coworking-primary ${
-                    isActive(link.path) ? 'text-coworking-primary' : 'text-gray-600'
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {link.name}
-                </Link>
-              ))}
-              {token ? (
-                <>
-                  <Link
-                    to="/profile"
-                    className="block py-2 text-base font-medium text-gray-600 hover:text-coworking-primary flex items-center gap-2"
-                    onClick={() => setMobileMenuOpen(false)}
-                  >
-                    <User size={16} />
-                    Profil
-                  </Link>
-                  <button
-                    onClick={() => {
-                      logout();
-                      setMobileMenuOpen(false);
-                    }}
-                    className="block py-2 text-base font-medium text-gray-600 hover:text-coworking-primary flex items-center gap-2"
-                  >
-                    <LogOut size={16} />
-                    Déconnexion
-                  </button>
-                </>
-              ) : (
-                <Link
-                  to="/login"
-                  className="btn-primary inline-flex items-center gap-2 mt-2"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  <User size={16} />
-                  Connexion
-                </Link>
-              )}
-            </div>
+       {mobileMenuOpen && (
+  <div className="md:hidden bg-white shadow-lg animate-fade-in">
+    <div className="container-custom py-4 flex flex-col gap-4">
+      {navLinks.map((link) => (
+        <Link
+          key={link.path}
+          to={link.path}
+          className={`block py-2 text-base font-medium transition-colors hover:text-coworking-primary ${
+            isActive(link.path) ? 'text-coworking-primary' : 'text-gray-600'
+          }`}
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          {link.name}
+        </Link>
+      ))}
+
+      {loading ? (
+        user?.rule === "client" ? (
+          <Link
+            to="/dashboard/booking"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2 text-base font-medium text-gray-600 hover:text-coworking-primary flex items-center gap-2"
+          >
+            <ClipboardCheck size={16} /> Reservation
+          </Link>
+        ) : (
+          <Link
+            to="/dashboard"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block py-2 text-base font-medium text-gray-600 hover:text-coworking-primary flex items-center gap-2"
+          >
+            <User size={16} /> Dashboard
+          </Link>
+        )
+      ) : (
+        <Link
+          to="/login"
+          className="btn-primary inline-flex items-center gap-2 mt-2"
+          onClick={() => setMobileMenuOpen(false)}
+        >
+          <User size={16} />
+          Connexion
+        </Link>
+      )}
+
+          {loading && (
+              <button
+                onClick={() => {
+                  logout();
+                  setMobileMenuOpen(false);
+                }}
+                className="block py-2 text-base font-medium text-gray-600 hover:text-coworking-primary flex items-center gap-2"
+              >
+                <LogOut size={16} />
+                Déconnexion
+              </button>
+            )}
           </div>
-        )}
+        </div>
+      )} 
+
       </header>
 
       {/* Main Content */}
