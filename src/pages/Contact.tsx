@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { MapPin, Phone, Mail, MessageSquare, Clock, ArrowRight } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
-import { HoverCard, HoverCardTrigger, HoverCardContent } from "@/components/ui/hover-card";
+import emailjs from "@emailjs/browser";
+
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -19,6 +20,8 @@ const Contact = () => {
   const [infoRef, infoVisible] = useIntersectionObserver<HTMLDivElement>();
   const [mapRef, mapVisible] = useIntersectionObserver<HTMLElement>();
   const [ctaRef, ctaVisible] = useIntersectionObserver<HTMLElement>();
+   const formRef2 = useRef();
+      
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -28,6 +31,12 @@ const Contact = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
+     emailjs
+         .sendForm("service_oav8kih", "template_bm1vfgp", formRef2.current, "hVdfFTr1LuscYkNSI")
+         .then(() => {
+           alert("Email sent successfully!");
+         })
+         .catch((err) => console.error(err));
     
     // Simulate API call
     setTimeout(() => {
@@ -77,7 +86,7 @@ const Contact = () => {
                 Remplissez le formulaire ci-dessous et nous vous répondrons dans les plus brefs délais.
               </p>
               
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <form ref={formRef2} onSubmit={handleSubmit} className="space-y-6">
                 <div className="transition-all duration-300 hover:translate-y-[-2px]">
                   <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
                     Nom complet
@@ -228,9 +237,8 @@ const Contact = () => {
                   <div className="ml-4">
                     <h3 className="text-lg font-semibold">Heures d'ouverture</h3>
                     <p className="text-gray-600">
-                      Lundi - Vendredi: 8h00 - 20h00<br />
-                      Samedi: 9h00 - 18h00<br />
-                      Dimanche: Fermé
+                      7/7 jours<br />
+                      du 8h à 20h<br />
                     </p>
                   </div>
                 </div>

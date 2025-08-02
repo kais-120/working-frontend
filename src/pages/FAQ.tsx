@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, ChevronDown, ChevronUp, Globe } from 'lucide-react';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
@@ -57,9 +57,9 @@ const FAQ = () => {
         ar: "ما هي ساعات العمل لديكم؟"
       },
       answer: {
-        fr: "Notre espace est ouvert du lundi au vendredi de 8h00 à 20h00, et le samedi de 9h00 à 18h00. Les membres Premium bénéficient d'un accès 24/7.",
-        en: "Our space is open Monday to Friday from 8:00 AM to 8:00 PM, and Saturday from 9:00 AM to 6:00 PM. Premium members have 24/7 access.",
-        ar: "مساحتنا مفتوحة من الاثنين إلى الجمعة من 8:00 صباحًا حتى 8:00 مساءً، والسبت من 9:00 صباحًا حتى 6:00 مساءً. يتمتع الأعضاء المميزون بإمكانية الوصول على مدار الساعة طوال أيام الأسبوع."
+        fr: "Notre espace est disponible toute la semaine, de 8h à 20h.",
+        en: "Our space is available all week, from 8 AM to 8 PM.",
+        ar: "مساحتنا متاحة طوال الأسبوع، من الساعة 8 صباحًا حتى الساعة 8 مساءً."
       },
       category: "general"
     },
@@ -71,9 +71,9 @@ const FAQ = () => {
         ar: "ما هي أنواع الاشتراكات التي تقدمها؟"
       },
       answer: {
-        fr: "Nous proposons plusieurs formules adaptées à différents besoins : Flexible (à la journée), Privatif (accès limité), Pro (accès complet) et Premium (bureau dédié). Chaque formule offre différents avantages et services.",
-        en: "We offer several subscription packages tailored to different needs: Flexible (daily), Privatif (limited access), Pro (full access), and Premium (dedicated office). Each package offers various benefits and services.",
-        ar: "نحن نقدم عدة أنواع من الاشتراكات ملائمة لاحتياجات مختلفة: Flexible (يوميًا), Privatif (الوصول المحدود), Pro (الوصول الكامل) وPremium (المساحة المخصصة). كل من هذه الأنواع تقدم العديد من الفوائد والخدمات."
+        fr: "Nous proposons trois formules pensées pour répondre à tous les besoins : Nomade (accès à la journée en toute flexibilité), Abonné (accès régulier avec services inclus) et Privatif (bureau réservé pour un usage exclusif). Chaque formule offre des avantages spécifiques pour s’adapter à votre rythme de travail.",
+        en: "We offer three packages designed to meet all needs: Nomade (flexible day access), Abonné (regular access with services included), and Privatif (private office for exclusive use). Each package offers specific advantages to adapt to your work pace.",
+        ar: "نحن نقدم عدة أنواع من الاشتراكات ملائمة لاحتياجات مختلفة: Nomade (ولوج ليوم كامل بمرونة تامة), Abonné (ولوج منتظم مع خدمات متضمنة), Pro (الوصول الكامل) وPrivatif (مكتب محجوز للاستخدام الحصري). كل من هذه الأنواع تقدم العديد من الفوائد والخدمات."
       },
       category: "membership"
     },

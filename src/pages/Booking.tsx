@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -10,6 +10,8 @@ import { Calendar as CalendarIcon, Clock, Users, LayoutGrid, ChevronRight } from
 import { cn } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import axios from "axios";
+import { API_URL } from "../API/Api";
 
 interface Space {
   id: string;
@@ -31,6 +33,12 @@ const Booking = () => {
   const [numGuests, setNumGuests] = useState(1);
   const [selectedType, setSelectedType] = useState<string | null>("all");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [token, setToken] = useState<string | null>(null);
+  useEffect(() => {
+    const storedToken = localStorage.getItem('auth');
+      setToken(storedToken);
+    }
+  , []);
   
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -52,7 +60,7 @@ const Booking = () => {
 
   const spaces: Space[] = [
     {
-      id: "open-space-1",
+      id: "6835d4c2281d742092b25cbf",
       name: "Espace Commun",
       type: "open-space",
       capacity: 15,
@@ -63,7 +71,7 @@ const Booking = () => {
       amenities: ["WiFi haut débit", "Prises électriques", "Café inclus", "Climatisation", "Tables partagées"]
     },
     {
-      id: "meeting-room-1",
+      id: "6835d4c2281d742092b25cbf",
       name: "Salle de Réunion - Small",
       type: "meeting-room",
       capacity: 6,
@@ -75,7 +83,7 @@ const Booking = () => {
     },
     
     {
-      id: "private-office-1",
+      id: "6835d4c2281d742092b25cbf",
       name: "Bureau Privé - S",
       type: "private-office",
       capacity: 2,
@@ -86,7 +94,7 @@ const Booking = () => {
       amenities: ["WiFi haut débit", "Bureau dédié", "Porte verrouillable", "Fenêtre", "Imprimante partagée"]
     },
     {
-      id: "private-office-1",
+      id: "6835d4c2281d742092b25cbf",
       name: "Bureau Privé - m",
       type: "private-office",
       capacity: 4,
@@ -98,7 +106,7 @@ const Booking = () => {
     },
     
     {
-      id: "event-space",
+      id: "6835d4c2281d742092b25cbf",
       name: "Espace Événementiel",
       type: "event-space",
       capacity: 30,
@@ -107,7 +115,26 @@ const Booking = () => {
       description: "Grand espace modulable pour vos événements professionnels, ateliers ou présentations. Capacité jusqu'à 30 personnes selon la configuration.",
       image: "img/469979390_122196693290223967_571954813380669522_n.jpg",
       amenities: ["WiFi haut débit", "Projecteur", "Système son", "Configurations flexibles", "Espace traiteur"]
-    }
+    },
+    {
+  id: "pergola-gazon-2025",
+  name: "Pergola avec Gazon",
+  type: "outdoor-relax-space",
+  capacity: 6,
+  pricePerDay: 20,
+  pricePerHour: 4,
+  description: "Nouveauté chez Djerba Coworking ! Profitez d’un espace extérieur unique sous pergola, entouré de verdure. Un coin convivial et relaxant parfait pour travailler autrement, partager un café, ou laisser les enfants jouer en toute tranquillité. L’endroit idéal pour allier détente, nature et productivité.",
+  image: "img/506634069_122245292678223967_4419388014276913923_n.jpg",
+  amenities: [
+    "WiFi extérieur",
+    "Gazon synthétique",
+    "Balançoire détente",
+    "Espace adapté aux familles",
+    "Coin café en plein air",
+    "Ambiance naturelle et ombragée"
+  ]
+}
+
   ];
 
   const timeSlots = [
@@ -149,8 +176,7 @@ const Booking = () => {
       return selectedSpace.pricePerHour * hours;
     }
   };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!selectedDate || !selectedTime || !selectedDuration || !selectedSpace) {
@@ -173,6 +199,19 @@ const Booking = () => {
       guests: numGuests,
       totalPrice: calculateTotalPrice()
     };
+      await axios.post(`${API_URL}/auth/booking/add`,{
+        spaceId:bookingDetails.space.id,
+        date:bookingDetails.date,
+        Nombre_personnes:bookingDetails.guests,
+      },
+      {
+        headers :{
+        Authorization: `Bearer ${window.localStorage.getItem("auth")}`,
+      }}
+      )
+      .then((response)=>console.log(response))
+      .catch((err)=>console.error(err))
+      
     
     // Simuler un traitement de la réservation et passer à la page de paiement
     setTimeout(() => {
@@ -256,9 +295,7 @@ const Booking = () => {
                     alt={space.name} 
                     className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-700"
                   />
-                  <div className="absolute top-4 right-4 bg-coworking-primary text-white text-sm font-bold px-3 py-1 rounded-full pulse-animation">
-                    {space.pricePerDay}Dt/jour
-                  </div>
+                  
                 </div>
                 <div className="p-6">
                   <h3 className="text-xl font-bold mb-2 text-gradient">{space.name}</h3>
@@ -295,9 +332,11 @@ const Booking = () => {
                     className="w-full btn-primary group relative overflow-hidden"
                     onClick={() => handleSpaceSelection(space)}
                   >
-                    <span className="relative z-10 flex items-center justify-center">
-                      Réserver <ChevronRight className="ml-1 group-hover:translate-x-1 transition-transform" size={18} />
+                    <button disabled={!token} className="relative z-10">
+                      <span className='flex items-center justify-center'>
+                        Réserver <ChevronRight className="ml-1 group-hover:translate-x-1 transition-transform" size={18} />
                     </span>
+                    </button>
                   </button>
                 </div>
               </div>
@@ -307,6 +346,7 @@ const Booking = () => {
       </section>
 
       {/* Booking Form */}
+     
       <section 
         id="booking-form" 
         ref={formRef}
@@ -364,40 +404,44 @@ const Booking = () => {
                 {/* Date Row */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                   {/* Date */}
-                  <div className="group">
-                    <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-coworking-primary transition-colors">
-                      Date *
-                    </label>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          className={cn(
-                            "w-full justify-start text-left font-normal border-gray-300 group-hover:border-coworking-primary transition-colors",
-                            !selectedDate && "text-gray-500"
-                          )}
-                        >
-                          <CalendarIcon className="mr-2 h-4 w-4" />
-                          {selectedDate ? (
-                            format(selectedDate, "dd MMMM yyyy", { locale: fr })
-                          ) : (
-                            <span>Sélectionnez une date</span>
-                          )}
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-auto p-0 pointer-events-auto" align="start">
-                        <Calendar
-                          mode="single"
-                          selected={selectedDate}
-                          onSelect={setSelectedDate}
-                          disabled={(date) => date < new Date()}
-                          initialFocus
-                          locale={fr}
-                          className="p-3"
-                        />
-                      </PopoverContent>
-                    </Popover>
-                  </div>
+<div className="group relative z-10"> {/* z-10 pour garantir une bonne superposition */}
+  <label className="block text-sm font-medium text-gray-700 mb-2 group-hover:text-coworking-primary transition-colors">
+    Date *
+  </label>
+  <Popover>
+    <PopoverTrigger asChild>
+      <Button
+        variant="outline"
+        className={cn(
+          "w-full justify-start text-left font-normal border-gray-300 group-hover:border-coworking-primary transition-colors",
+          !selectedDate && "text-gray-500"
+        )}
+      >
+        <CalendarIcon className="mr-2 h-4 w-4" />
+        {selectedDate ? (
+          format(selectedDate, "dd MMMM yyyy", { locale: fr })
+        ) : (
+          <span>Sélectionnez une date</span>
+        )}
+      </Button>
+    </PopoverTrigger>
+    <PopoverContent
+      className="w-auto p-0 pointer-events-auto z-50 bg-white shadow-lg border rounded-md"
+      align="start"
+    >
+      <Calendar
+        mode="single"
+        selected={selectedDate}
+        onSelect={setSelectedDate}
+        disabled={(date) => date < new Date()}
+        initialFocus
+        locale={fr}
+        className="p-3"
+      />
+    </PopoverContent>
+  </Popover>
+</div>
+
                   
                   {/* Time */}
                   <div className="group">
@@ -575,6 +619,7 @@ const Booking = () => {
           </div>
         </div>
       </section>
+     
     </div>
   );
 };

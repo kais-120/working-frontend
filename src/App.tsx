@@ -11,16 +11,29 @@ import About from "./pages/About";
 import Membership from "./pages/Membership";
 import Contact from "./pages/Contact";
 import FAQ from "./pages/FAQ";
-import Booking from "./pages/Booking";
 import Login from "./pages/Login";
 import Payment from "./pages/Payment";
 import NotFound from "./pages/NotFound";
+import AdminDashboard from "./pages/AdminDashboard";
 
-// Layout
 import Layout from "./components/layout/Layout";
 
 // Context
 import { AppProvider } from "./context/AppContext";
+import Register from "./pages/Register";
+import AuthRole from "./role/AuthRole";
+import Dashboard from "./pages/Dashboard";
+import UsersManger from "./pages/UsersManger";
+import BookingManger from "./pages/BookingManger";
+import BookingDashboard from "./pages/Test";
+import ClientBooking from "./pages/ClientBooking";
+import Profile from "./pages/Profile";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentDenied from "./pages/PaymentDenied";
+import ReviewManger from "./pages/ReviewManger";
+import Email from "./pages/dashboard/profile/Email";
+import Password from "./pages/dashboard/profile/Password";
+import VerifyPayment from "./pages/dashboard/VerifyPayment";
 
 const queryClient = new QueryClient();
 
@@ -35,10 +48,32 @@ const App = () => (
             <Route path="/membership" element={<Layout><Membership /></Layout>} />
             <Route path="/contact" element={<Layout><Contact /></Layout>} />
             <Route path="/faq" element={<Layout><FAQ /></Layout>} />
-            <Route path="/booking" element={<Layout><Booking /></Layout>} />
             <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route path="/payment" element={<Layout><Payment /></Layout>} />
             <Route path="*" element={<Layout><NotFound /></Layout>} />
+            <Route path="/test" element={<BookingDashboard />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/fail" element={<PaymentDenied />} />
+            <Route element={<AuthRole allowRole={["admin","owner","client"]} />}>
+              <Route path="dashboard" element={<Dashboard />}>
+                <Route element={<AuthRole allowRole={["admin","owner"]} />}>
+                  <Route index element={<AdminDashboard />} />
+                  <Route path="manger/booking" element={<BookingManger />} />
+                  <Route path="verify-payment" element={<VerifyPayment />} />
+                </Route>
+                <Route element={<AuthRole allowRole={["admin"]} />}>
+                  <Route path="users" element={<UsersManger />} />
+                  <Route path="reviews" element={<ReviewManger />} />
+                </Route>
+                <Route element={<AuthRole allowRole={["client"]} />}>
+                  <Route path="booking" element={<ClientBooking />} />
+                </Route>
+                  <Route path="profile" element={<Profile />}/>
+                  <Route path="profile/email" element={<Email />}/>
+                  <Route path="profile/password" element={<Password />}/>
+              </Route>
+            </Route>
           </Routes>
           <Toaster />
           <Sonner />

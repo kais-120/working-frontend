@@ -1,70 +1,116 @@
 
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Check, X, ArrowRight, Clock, Wifi, Coffee, Users } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
 import { Button } from '@/components/ui/button';
 import { toast } from '@/hooks/use-toast';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import MembershipDialog from '@/components/MembershipDialog';
+import MembershipDialogCustom from '@/components/MembershipDialogCustom';
+import { useUser } from '@/hooks/useUser';
 
 const PricingCard = ({ title, price, period, features, notIncluded, popular = false, buttonText = "S'abonner" }) => {
   const [cardRef, isVisible] = useIntersectionObserver<HTMLDivElement>({ threshold: 0.1 });
-  
-  const handleButtonClick = () => {
-    toast({
-      title: "Option sélectionnée",
-      description: `Vous avez choisi l'option ${title} à ${price}Dt/${period}`,
-      variant: "default",
-    });
-  };
+  const [open,setOpen] = useState(false)
+  const [membership,setMembership] = useState([])
+  const navigate = useNavigate()
 
+  const { error} = useUser()
   return (
-    <div 
-      ref={cardRef} 
-      className={`bg-white rounded-lg shadow-lg overflow-hidden transition-all duration-500 ${
-        isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-      } ${popular ? 'ring-2 ring-coworking-primary transform hover:scale-105' : 'hover:scale-102'}`}
-    >
-      {popular && (
-        <div className="bg-coworking-primary text-white text-center py-2 font-medium shine-effect">
-          Recommandé
-        </div>
-      )}
-      <div className="p-6 relative">
-        <h3 className="text-2xl font-bold mb-2 hover:text-gradient transition-colors">{title}</h3>
-        <div className="mb-4">
-          <span className="text-4xl font-bold float-animation inline-block">{price}Dt</span>
-          <span className="text-gray-600">/{period}</span>
-        </div>
-        <div className="border-t border-gray-200 pt-4 mb-6">
-          <ul className="space-y-3">
-            {features.map((feature, index) => (
-              <li key={index} className="flex items-start animate-text-reveal" style={{ animationDelay: `${index * 100}ms` }}>
-                <Check className="text-coworking-secondary mr-2 flex-shrink-0 mt-1 pulse-animation" size={18} />
+   <div 
+  ref={cardRef} 
+  className={`bg-white h-full rounded-lg shadow-lg overflow-hidden transition-all duration-500 flex flex-col ${
+    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+  } ${popular ? 'ring-2 ring-coworking-primary transform hover:scale-105' : 'hover:scale-102'}`}
+>
+  {popular && (
+    <div className="bg-coworking-primary text-white text-center py-2 font-medium shine-effect">
+      Recommandé
+    </div>
+  )}
+  {
+    title === "Personnalisé" ?
+    <MembershipDialogCustom selectedPlanType={buttonText} open={open} onOpenChange={setOpen} membership={{ title, price }} />
+    :
+    <MembershipDialog selectedPlanType={buttonText} open={open} onOpenChange={setOpen} membership={{ title, price }} />
+  }
+
+  <div className="p-6 flex flex-col flex-grow">
+    <div>
+      <h3 className="text-2xl font-bold mb-2 hover:text-gradient transition-colors">{title}</h3>
+
+      <div className="mb-4">
+        {title !== "Personnalisé" ? (
+          <>
+            <span className="text-4xl font-bold float-animation inline-block">
+              {period === "jour" ? price[1]?.day : price}Dt
+            </span>
+            <span className="text-gray-600">/{period}</span>
+          </>
+        ) : (
+          <p className="text-sm text-gray-500 italic mb-2">
+            Choisissez les fonctionnalités selon vos besoins
+          </p>
+        )}
+      </div>
+
+      <div className="border-t border-gray-200 pt-4 mb-6">
+        <ul className="space-y-3">
+          {features.map((feature, index) => (
+            <li
+              key={index}
+              className="flex items-start animate-text-reveal cursor-default"
+              style={{ animationDelay: `${index * 100}ms` }}
+            >
+              <Check
+                className="text-coworking-secondary mr-2 flex-shrink-0 mt-1 pulse-animation"
+                size={18}
+              />
+              <span>{feature}</span>
+            </li>
+          ))}
+
+          {notIncluded &&
+            notIncluded.map((feature, index) => (
+              <li
+                key={index}
+                className="flex items-start text-gray-400 animate-text-reveal"
+                style={{ animationDelay: `${(features.length + index) * 100}ms` }}
+              >
+                <X
+                  className="text-gray-400 mr-2 flex-shrink-0 mt-1"
+                  size={18}
+                />
                 <span>{feature}</span>
               </li>
             ))}
-            {notIncluded && notIncluded.map((feature, index) => (
-              <li key={index} className="flex items-start text-gray-400 animate-text-reveal" style={{ animationDelay: `${(features.length + index) * 100}ms` }}>
-                <X className="text-gray-400 mr-2 flex-shrink-0 mt-1" size={18} />
-                <span>{feature}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-        <Button 
-          onClick={handleButtonClick}
-          className={`block text-center py-2 px-4 rounded-md font-medium w-full button-hover-effect ${
-            popular 
-            ? 'bg-coworking-primary text-white hover:bg-blue-600' 
-            : 'bg-coworking-secondary text-white hover:bg-green-600'
-          } transition-colors`}
-          asChild
-        >
-          <Link to="/booking">{buttonText}</Link>
-        </Button>
+        </ul>
       </div>
     </div>
+
+    <Button
+      onClick={() => {
+        if(!error){
+          setOpen(true);
+          setMembership(title);
+        }
+        else{
+          navigate("/login")
+        }
+      }}
+      className={`mt-auto block text-center py-2 px-4 rounded-md font-medium w-full button-hover-effect cursor-pointer ${
+        popular
+          ? 'bg-coworking-primary text-white hover:bg-blue-600'
+          : 'bg-coworking-secondary text-white hover:bg-green-600'
+      } transition-colors`}
+      asChild
+    >
+      <span>{buttonText}</span>
+    </Button>
+  </div>
+</div>
+
   );
 };
 
@@ -92,7 +138,7 @@ const Membership = () => {
   // Daily pricing plans
   const dailyAbonnéPlan = {
     title: "Abonné",
-    price: 25,
+    price: [{"hour":4},{"day":25},{"week":100}],
     period: "jour",
     features: [
       "Connexion fibre haut débit",
@@ -110,7 +156,7 @@ const Membership = () => {
 
   const dailyPrivatifPlan = {
     title: "Privatif",
-    price: 50,
+    price: [{"hour":10},{"day":50},{"week":200}],
     period: "jour",
     features: [
       "Connexion fibre haut débit",
@@ -129,7 +175,7 @@ const Membership = () => {
 
   const dailyNomadePlan = {
     title: "Nomade",
-    price: 35,
+    price: [{"hour":5},{"day":35},{"week":120}],
     period: "jour",
     features: [
       "Connexion fibre haut débit",
@@ -144,7 +190,6 @@ const Membership = () => {
     ]
   };
 
-  
 
   // Monthly pricing plans based on the image
   const NomadePlan = {
@@ -199,11 +244,25 @@ const Membership = () => {
     ],
     notIncluded: []
   };
+  const CustomPlan = {
+    title: "Personnalisé",
+    price: null,
+    period: null,
+     features: [
+  "Accès complet à tous les équipements",
+  "Bureau dédié ou insonorisé",
+  "Snacks & boissons inclus",
+  "Accès salle de réunion & événements",
+  "Services administratifs disponibles",
+  "Création société sur demande"
+  ],
+    notIncluded: []
+  };
 
   // Choose which plans to display based on toggle state
   const plansToDisplay = isMonthly ? 
-    [AbonnéPlan,NomadePlan, privatifPlan] : 
-    [dailyAbonnéPlan, dailyPrivatifPlan, dailyNomadePlan, ];
+    [AbonnéPlan,NomadePlan, privatifPlan,CustomPlan] : 
+    [dailyAbonnéPlan, dailyPrivatifPlan, dailyNomadePlan,CustomPlan ];
 
   return (
     <div>
@@ -278,7 +337,7 @@ const Membership = () => {
             </p>
           </div>
           
-          <div className={`grid grid-cols-1 ${isMonthly ? 'md:grid-cols-3' : 'md:grid-cols-2 lg:grid-cols-3'} gap-8 transition-all duration-500`}>
+          <div className={`grid grid-cols-1 ${isMonthly ? 'md:grid-cols-4' : 'md:grid-cols-2 lg:grid-cols-4'} gap-8 transition-all duration-500  items-stretch`}>
             {plansToDisplay.map((plan, index) => (
               <PricingCard 
                 key={index} 
@@ -288,23 +347,7 @@ const Membership = () => {
               />
             ))}
           </div>
-          
-          <div className="mt-12 bg-gray-50 p-6 rounded-lg hover:shadow-md transition-shadow duration-300 interactive-card">
-            <h3 className="text-xl font-bold mb-4 hover:text-gradient transition-colors">Vous cherchez une solution pour votre équipe?</h3>
-            <p className="mb-4">
-              Nous proposons des formules sur mesure pour les équipes de toute taille. Contactez-nous pour discuter de vos besoins spécifiques et obtenir un devis personnalisé.
-            </p>
-            <Button 
-              variant="link"
-              className="inline-flex items-center text-coworking-primary hover:text-blue-700 font-medium transition-colors"
-              asChild
-            >
-              <Link to="/contact">
-                Demander un devis personnalisé
-                <ArrowRight size={16} className="ml-2 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          </div>
+        
         </div>
       </section>
 

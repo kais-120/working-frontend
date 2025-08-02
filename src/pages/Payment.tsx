@@ -12,10 +12,11 @@ const Payment = () => {
   const [cvv, setCvv] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [bookingDetails, setBookingDetails] = useState<any>(null);
+  const location = useLocation();
   
   const { toast } = useToast();
-  const location = useLocation();
   const navigate = useNavigate();
   
   // Animation refs
@@ -166,6 +167,7 @@ const Payment = () => {
   };
   
   const totalAmount = calculateTotal();
+
   
   return (
     <div className="min-h-screen bg-gray-50 py-12">

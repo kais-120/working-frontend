@@ -1,15 +1,15 @@
 
-import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Wifi, Coffee, Calendar, Clock, Users } from 'lucide-react';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import ReviewSection from '@/components/layout/ReviewSection';
 
 const Home = () => {
   const [heroRef, heroVisible] = useIntersectionObserver<HTMLElement>();
   const [benefitsRef, benefitsVisible] = useIntersectionObserver<HTMLElement>();
   const [spacesRef, spacesVisible] = useIntersectionObserver<HTMLElement>();
-  const [testimonialRef, testimonialVisible] = useIntersectionObserver<HTMLElement>();
   const [ctaRef, ctaVisible] = useIntersectionObserver<HTMLElement>();
+
 
   return (
     <div>
@@ -30,12 +30,10 @@ const Home = () => {
                 Un environnement professionnel, créatif et stimulant pour vos projets et votre réussite.
               </p>
               <div className="flex flex-wrap gap-4 animate-fade-in">
-                <Link to="/booking" className="bg-white text-coworking-primary hover:bg-blue-50 px-6 py-3 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95">
+                <Link to="/membership" className="bg-white text-coworking-primary hover:bg-blue-50 px-6 py-3 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95">
                   Réserver un espace
                 </Link>
-                <Link to="/membership" className="bg-coworking-secondary hover:bg-green-600 text-white px-6 py-3 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95">
-                  Voir les tarifs
-                </Link>
+              
               </div>
             </div>
             <div className="rounded-lg overflow-hidden shadow-xl shine-effect ">
@@ -132,10 +130,7 @@ const Home = () => {
                 </p>
                 <div className="flex justify-between items-center">
                   
-                  <Link to="/booking" className="flex items-center text-coworking-primary hover:text-blue-700 button-hover-effect transition-all duration-300 hover:translate-x-1">
-                    Réserver 
-                    <ArrowRight size={16} className="ml-1" />
-                  </Link>
+                
                 </div>
               </div>
             </div>
@@ -158,10 +153,7 @@ const Home = () => {
                 </p>
                 <div className="flex justify-between items-center">
                   
-                  <Link to="/booking" className="flex items-center text-coworking-primary hover:text-blue-700">
-                    Réserver 
-                    <ArrowRight size={16} className="ml-1" />
-                  </Link>
+                  
                 </div>
               </div>
             </div>
@@ -183,17 +175,14 @@ const Home = () => {
                 </p>
                 <div className="flex justify-between items-center">
                   
-                  <Link to="/booking" className="flex items-center text-coworking-primary hover:text-blue-700">
-                    Réserver 
-                    <ArrowRight size={16} className="ml-1" />
-                  </Link>
+                 
                 </div>
               </div>
             </div>
           </div>
           
           <div className="text-center mt-12">
-            <Link to="/booking" className="btn-primary inline-flex items-center transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95">
+            <Link to="/membership" className="btn-primary inline-flex items-center transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95">
               Voir tous nos espaces
               <ArrowRight size={16} className="ml-2 transform group-hover:translate-x-1 transition-transform" />
             </Link>
@@ -202,58 +191,8 @@ const Home = () => {
       </section>
 
       {/* Testimonials */}
-      <section 
-        ref={testimonialRef}
-        className={`py-16 bg-gray-50 
-          ${testimonialVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}
-          transition-all duration-1000 ease-out`}
-      >
-        <div className="container-custom">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4 text-gradient">Ce que disent nos membres</h2>
-            <p className="text-gray-600 max-w-2xl mx-auto">
-              Découvrez l'expérience de nos membres au sein de notre espace de coworking.
-            </p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8">
-            {/* Testimonials 1, 2 & 3 */}
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-500 transform hover:scale-105 hover:translate-y-[-5px]">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-coworking-primary text-white flex items-center justify-center font-bold text-xl">
-                 H
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold">Helmi</h4>
-                  <p className="text-sm text-gray-600">Développeur web</p>
-                </div>
-              </div>
-              <p className="text-gray-600">
-                "Toutes les conditions sont réunis pour augmenter la productivité.L'ambiance est parfaite pour se concentrer,et les rencontres avec d'autres professionnels sont enrichissantes .Les snacks son un petit plus très apprécié !"
-              </p>
-            </div>
-            
-            <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-500 transform hover:scale-105 hover:translate-y-[-5px]">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-full bg-coworking-secondary text-white flex items-center justify-center font-bold text-xl">
-                  M
-                </div>
-                <div className="ml-4">
-                  <h4 className="font-bold">Mohammed</h4>
-                  <p className="text-sm text-gray-600">Chef de projet web</p>
-                </div>
-              </div>
-              <p className="text-gray-600">
-                "J'ai utilisé des nombreux espaces de coworking dans le monde , mais Djerba Coworking se distingue par son cadre exceptionnel et sons sens de la communauté.Les événements de networking m'ont aidé à établir des contacts précieux."
-              </p>
-            </div>
-            
-            
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
+          <ReviewSection />
+     
       <section 
         ref={ctaRef}
         className={`bg-coworking-primary text-white py-16
@@ -266,9 +205,6 @@ const Home = () => {
             Réservez votre espace dès aujourd'hui et profitez de tous nos services.
           </p>
           <div className="flex flex-wrap justify-center gap-4">
-            <Link to="/booking" className="bg-white text-coworking-primary hover:bg-blue-50 px-6 py-3 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95">
-              Réserver maintenant
-            </Link>
             <Link to="/membership" className="bg-coworking-accent text-white hover:bg-yellow-600 px-6 py-3 rounded-md font-semibold transition-all duration-300 transform hover:scale-105 hover:shadow-md active:scale-95">
               Voir nos formules d'adhésion
             </Link>
