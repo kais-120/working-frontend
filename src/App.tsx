@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Pages
 import Home from "./pages/Home";
+import LoginRole from "@/role/LoginRole";
 import About from "./pages/About";
 import Membership from "./pages/Membership";
 import Contact from "./pages/Contact";
@@ -48,8 +49,10 @@ const App = () => (
             <Route path="/membership" element={<Layout><Membership /></Layout>} />
             <Route path="/contact" element={<Layout><Contact /></Layout>} />
             <Route path="/faq" element={<Layout><FAQ /></Layout>} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route element={<LoginRole />}>
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+            </Route>
             <Route path="/payment" element={<Layout><Payment /></Layout>} />
             <Route path="*" element={<Layout><NotFound /></Layout>} />
             <Route path="/test" element={<BookingDashboard />} />

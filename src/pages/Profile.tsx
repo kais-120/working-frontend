@@ -31,6 +31,7 @@ interface User{
 }
 
 const Profile = () => {
+  const [loading,setLoading] = useState(true)
   const [user, setUser] = useState <User>({
     name:"",
     last_name:"",
@@ -47,6 +48,7 @@ const Profile = () => {
        .then((response)=>{
          setUser(response.data);
        }).catch((err)=>console.error(err))
+       .finally(()=>{setLoading(false)})
    
      }, [token]);
     const formik = useFormik({
@@ -74,7 +76,13 @@ const Profile = () => {
       }
     })
 
-
+if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
+  }
   return (
     <div className="max-w-3xl mt-10 p-6 ">
       <form onSubmit={formik.handleSubmit}>

@@ -1,9 +1,6 @@
 import Sidebar from '@/components/layout/SideBar'
 import TopBar from '@/components/layout/TopBar'
-import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom'
-import Cookies from 'universal-cookie';
-import { AxiosToken } from "../API/Api";
 import { useUser } from '@/hooks/useUser';
 interface User {
   rule:string

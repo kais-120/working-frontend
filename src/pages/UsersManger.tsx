@@ -25,6 +25,7 @@ import { Plus, Trash } from "lucide-react"
 import AddNewsOwner from "@/components/AddNewsOwner"
 import { Input } from "@/components/ui/input"
 import Swal from "sweetalert2"
+import { useUser } from "@/hooks/useUser"
 
 const UsersManager = () => {
   const [users, setUsers] = useState({ users: { rows: [], count: 0 }, totalPage: 1 })
@@ -62,9 +63,10 @@ const UsersManager = () => {
         setUsersFilter(users)
       }
     }, 300)
-
+    
     return () => clearTimeout(delaySearch)
   }, [search,page,change])
+  const currentUser = useUser()
   const totalPages = usersFilter?.totalPage || 1
 
   const getPages = () => {
@@ -156,9 +158,10 @@ const UsersManager = () => {
                 <TableCell>{user.name}</TableCell>
                 <TableCell>{user.last_name}</TableCell>
                 <TableCell>{user.email}</TableCell>
-                <TableCell>{user.rule}</TableCell>
+                <TableCell>{user.rule === "owner" ? "Proriétaire" : user.rule}</TableCell>
                 <TableCell>{user.phone}</TableCell>
-                <TableCell><Trash onClick={()=>handleDelete(user.id,user.name)} className=" cursor-pointer" color="red" /></TableCell>
+                <TableCell><button  onClick={()=>handleDelete(user.id,user.name)}  disabled={currentUser?.user?.email === user?.email }><Trash  className={`w-5 h-5 ${
+        currentUser?.user?.email === user?.email ? 'text-red-400' : 'text-red-500 hover:text-red-700'}`}  /></button></TableCell>
               </TableRow>
             ))
           ) : (

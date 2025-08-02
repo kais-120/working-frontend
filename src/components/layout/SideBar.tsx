@@ -7,11 +7,7 @@ import { useUser } from "@/hooks/useUser";
 export default function Sidebar() {
   const isMobile = useIsMobile();
      const {loading,user} = useUser();
-      if(loading) return  (
-        <div className="flex items-center justify-center min-w-full  min-h-screen">
-          <div className="animate-spin rounded-full h-5  w-5 border-b-2 border-gray-600"></div>
-        </div>
-      );
+     
 
   let data = [];
 
@@ -48,13 +44,19 @@ export default function Sidebar() {
       <h2 className="text-xl font-bold mb-6">Djerba Coworking</h2>
       }
       <nav className="space-y-2">
-        {data.map((item, index) =>
+        {loading ?
+        <div className="flex items-center justify-center min-w-full  min-h-screen">
+          <div className="animate-spin rounded-full h-5  w-5 border-b-2 border-gray-600"></div>
+        </div>
+        :
+        data.map((item, index) =>
           !isMobile ? (
             <SidebarItem key={index} to={item.link} icon={item.icon} label={item.label} />
           ) : (
             <SidebarItemMobile key={index} to={item.link} icon={item.icon} />
           )
-        )}
+        )
+      }
       </nav>
     </div>
   );

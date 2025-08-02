@@ -135,7 +135,7 @@ const ReviewManger = () => {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {reviews && reviews?.reviews?.rows.map((review) => (
+                {reviews && reviews.length > 0 ? reviews?.reviews?.rows.map((review) => (
                   <tr key={review.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
@@ -191,10 +191,16 @@ const ReviewManger = () => {
                       </div>
                     </td>
                   </tr>
-                ))}
+                ))
+                :
+                <tr>
+                      <td className="text-gray-500 text-center" colSpan={6}>Aucun avis trouvé</td>
+                </tr>
+              }
               </tbody>
             </table>
           </div>
+          {reviews && reviews.length > 0 &&
            <Pagination className="mt-6">
         <PaginationContent>
           <PaginationItem>
@@ -230,6 +236,7 @@ const ReviewManger = () => {
           </PaginationItem>
         </PaginationContent>
       </Pagination>
+      }
       
         </div>
 

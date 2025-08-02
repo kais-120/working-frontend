@@ -250,7 +250,7 @@ const AdminDashboard = () => {
                     <Award className="h-8 w-8 text-blue-600" />
                     <div>
                       <p className="font-medium">Membership le plus populaire</p>
-                      <p className="text-sm text-gray-600">{quickStatistics?.bookingCounts[0]?.membership}</p>
+                      <p className="text-sm text-gray-600">{quickStatistics?.bookingCounts?.[0]?.membership}</p>
                     </div>
                   </div>
                 </div>
