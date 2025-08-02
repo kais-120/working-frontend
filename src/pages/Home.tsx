@@ -42,11 +42,7 @@ const Home = () => {
             </div>
             <div className="rounded-lg overflow-hidden shadow-xl shine-effect ">
               <img 
-<<<<<<< HEAD
                 src={mainImage}
-=======
-                src="/img/IMG-20240227-WA0023.jpg" 
->>>>>>> fbad458999f2cdb67bf3898005020ce3db631edf
                 alt="Notre histoire" 
                 className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105"
               />
@@ -123,11 +119,7 @@ const Home = () => {
             {/* Space Card 1 */}
             <div className="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:scale-105 hover:translate-y-[-5px] bg-white">
               <img 
-<<<<<<< HEAD
                 src={openSpace}
-=======
-                src="/img/477535602_17892227229176880_2164903299788972891_n.jpg" 
->>>>>>> fbad458999f2cdb67bf3898005020ce3db631edf
                 alt="Espace ouvert" 
                 className="w-full h-56 object-cover shine-effect"
               />
@@ -150,11 +142,7 @@ const Home = () => {
             {/* Space Cards 2 & 3 */}
             <div className="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:scale-105 hover:translate-y-[-5px] bg-white">
               <img 
-<<<<<<< HEAD
                 src={privateBureau}
-=======
-                src="/img/IMG-20240227-WA0011.jpg" 
->>>>>>> fbad458999f2cdb67bf3898005020ce3db631edf
                 alt="Bureau privé" 
                 className="w-full h-56 object-cover shine-effect"
               />
@@ -176,11 +164,7 @@ const Home = () => {
             
             <div className="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:scale-105 hover:translate-y-[-5px] bg-white">
               <img 
-<<<<<<< HEAD
                 src={revBureau}
-=======
-                src="/img/IMG-20240227-WA0012.jpgf_.jpg" 
->>>>>>> fbad458999f2cdb67bf3898005020ce3db631edf
                 alt="Salle de réunion" 
                 className="w-full h-56 object-cover shine-effect"
               />
