@@ -4,24 +4,19 @@ import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom'
 import Cookies from 'universal-cookie';
 import { AxiosToken } from "../API/Api";
+import { useUser } from '@/hooks/useUser';
 interface User {
   rule:string
 }
 
 const Dashboard = () => {
-   const [user, setUser] = useState<User>({
-    rule:""
-   });
-    const cookie = new Cookies();
-    const token = cookie.get("auth")
+    const {loading,user} = useUser();
+    if(loading) return  (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
+    );
   
-    useEffect(() => {
-      AxiosToken.get("/auth/profile")
-      .then((response)=>{
-        setUser(response.data);
-      })
-  
-    }, [token]);
   return (
     <div className="flex min-h-screen w-full">
     <Sidebar user={user.rule} />

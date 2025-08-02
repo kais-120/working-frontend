@@ -1,12 +1,15 @@
-import React from 'react';
 import { Clock, Coffee, Wifi, Users, Award, Map, Zap, Heart } from 'lucide-react';
 import { useIntersectionObserver } from '@/hooks/use-intersection-observer';
+import ourHistory from '@/Assets/img/IMG-20240227-WA0026-12.jpg'
+import workSpace from '../Assets/img/473185100_122202933860223967_850053379309046189_n.jpg'
+import revBureau from '../Assets/img/IMG-20240227-WA0010.jpg'
+import cafeSpace from '../Assets/img/IMG-20240227-WA0012.jpgf_.jpg'
+import privateBureau from '../Assets/img/IMG-20240227-WA0030.jpg'
 
 const About = () => {
   const [heroRef, heroVisible] = useIntersectionObserver<HTMLElement>();
   const [storyRef, storyVisible] = useIntersectionObserver<HTMLDivElement>();
   const [valuesRef, valuesVisible] = useIntersectionObserver<HTMLElement>();
-  const [teamRef, teamVisible] = useIntersectionObserver<HTMLElement>();
   const [spaceRef, spaceVisible] = useIntersectionObserver<HTMLElement>();
   const [ctaRef, ctaVisible] = useIntersectionObserver<HTMLElement>();
 
@@ -47,7 +50,7 @@ const About = () => {
             </div>
             <div className="rounded-lg overflow-hidden shadow-xl shine-effect">
               <img 
-                src="img\IMG-20240227-WA0026-12.jpg" 
+                src={ourHistory}
                 alt="Notre histoire" 
                 className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105"
               />
@@ -156,22 +159,22 @@ const About = () => {
             </div>
             <div className="order-1 md:order-2 grid grid-cols-2 gap-4">
               <img 
-                src="img\473185100_122202933860223967_850053379309046189_n.jpg" 
+                src={workSpace} 
                 alt="Espace de travail" 
                 className="rounded-lg shadow-md w-full h-40 md:h-48 object-cover transition-all duration-500 hover:scale-105 hover:shadow-xl"
               />
               <img 
-                src="img/IMG-20240227-WA0010.jpg" 
+                src={revBureau}
                 alt="Salle de réunion" 
                 className="rounded-lg shadow-md w-full h-40 md:h-48 object-cover transition-all duration-500 hover:scale-105 hover:shadow-xl"
               />
               <img 
-                src="img\IMG-20240227-WA0012.jpgf_.jpg" 
+                src={cafeSpace}
                 alt="Espace café" 
                 className="rounded-lg shadow-md w-full h-40 md:h-48 object-cover transition-all duration-500 hover:scale-105 hover:shadow-xl"
               />
               <img 
-                src="img\IMG-20240227-WA0030.jpg" 
+                src={privateBureau}
                 alt="Bureau privé" 
                 className="rounded-lg shadow-md w-full h-40 md:h-48 object-cover transition-all duration-500 hover:scale-105 hover:shadow-xl"
               />

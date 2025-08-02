@@ -1,14 +1,15 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, User, LogOut, ClipboardCheck } from 'lucide-react';
-import { AxiosToken } from '../../API/Api';
 import Cookies from 'universal-cookie';
+import { useUser } from '@/hooks/useUser';
+import logo from '@/Assets/img/Sans-titre-155.png'
+
 
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const [user,setUser] = useState();
   const location = useLocation();
   const cookie = new Cookies();
   const token = cookie.get("auth")
@@ -28,12 +29,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
 
-  useEffect(()=>{
-    if(!token) return;
-    AxiosToken.get(`/auth/profile`).
-    then((response)=>setUser(response.data))
-    .catch((err)=>console.error(err))
-  },[token]);
+ const {loading,user} = useUser();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -63,7 +59,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           {/* Logo */}
           <div className="flex items-center gap-3 text-blue">
             <img
-              src="img\\Sans-titre-155.png"
+              src={logo}
               alt="Logo Djerba Coworking"
               className="h-14 w-auto"
             />
@@ -87,7 +83,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             ))}
 
-{token ? (
+{!loading ? (
   <div className="relative">
     <button
       onClick={() => setUserMenuOpen(!userMenuOpen)}

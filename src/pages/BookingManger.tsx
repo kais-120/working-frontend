@@ -104,7 +104,6 @@ const BookingManger = () => {
         }
 
       } else {
-        // Pour les autres cas (non personnalisé ou "annuler")
         try {
           await AxiosToken.put(`/booking/update/status/${id}`, {
             status,

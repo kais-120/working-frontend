@@ -2,25 +2,32 @@ import { User, LayoutDashboard, Users, CalendarCheck, CreditCard, Star, BarChart
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useUser } from "@/hooks/useUser";
 
-export default function Sidebar({ user }) {
+export default function Sidebar() {
   const isMobile = useIsMobile();
+     const {loading,user} = useUser();
+      if(loading) return  (
+        <div className="flex items-center justify-center min-w-full  min-h-screen">
+          <div className="animate-spin rounded-full h-5  w-5 border-b-2 border-gray-600"></div>
+        </div>
+      );
 
   let data = [];
 
-  if (user === "client") {
+  if (user.rule === "client") {
     data = [
       { link: "booking", label: "Réservations", icon: <CalendarCheck /> },
     ];
   } else {
     data = [
       { link: "", label: "Statistiques", icon: <BarChart3 /> },
-      ...(user === "admin"
+      ...(user.rule === "admin"
         ? [{ link: "users", label: "Utilisateurs", icon: <Users /> }]
         : []),
       { link: "manger/booking", label: "Réservations", icon: <LayoutDashboard /> },
       { link: "verify-payment", label: "Vérification Paiement", icon: <CreditCard  /> },
-      ...(user === "admin"
+      ...(user.rule === "admin"
         ? [{ link: "reviews", label: "Avis", icon: <Star /> }]
         : []),
     ];

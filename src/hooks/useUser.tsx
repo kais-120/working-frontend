@@ -5,6 +5,7 @@ import { AxiosToken } from "../API/Api"
 export const  useUser = () => {
     const [user,setUser] = useState([]);
     const [error,setError] = useState(true);
+    const [loading,setLoading] = useState(true);
     const cookie = new Cookies();
     const token = cookie.get("auth")
   useEffect(()=>{
@@ -14,8 +15,9 @@ export const  useUser = () => {
              setUser(response.data);
              setError(false)
            }).catch(()=>setError(true))
+           .finally(()=>setLoading(false))
   },[token])
 
-  return  {user,error} ;
+  return  {user, error, loading} ;
 }
 

@@ -30,7 +30,7 @@ const AuthRole = ({allowRole}:AuthRoleProp) => {
 
   }, [navigate]);
 
-  if (isLoading) return "Loading..." ; 
+  if (isLoading) null ; 
 
   return allowRole.includes(user?.rule) ? <Outlet /> : navigate("/",{replace:true});
 };
