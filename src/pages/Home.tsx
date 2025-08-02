@@ -38,7 +38,7 @@ const Home = () => {
             </div>
             <div className="rounded-lg overflow-hidden shadow-xl shine-effect ">
               <img 
-                src="img\IMG-20240227-WA0023.jpg" 
+                src="/img/IMG-20240227-WA0023.jpg" 
                 alt="Notre histoire" 
                 className="w-full h-auto object-cover transition-transform duration-700 hover:scale-105"
               />
@@ -115,7 +115,7 @@ const Home = () => {
             {/* Space Card 1 */}
             <div className="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:scale-105 hover:translate-y-[-5px] bg-white">
               <img 
-                src="img/477535602_17892227229176880_2164903299788972891_n.jpg" 
+                src="/img/477535602_17892227229176880_2164903299788972891_n.jpg" 
                 alt="Espace ouvert" 
                 className="w-full h-56 object-cover shine-effect"
               />
@@ -138,7 +138,7 @@ const Home = () => {
             {/* Space Cards 2 & 3 */}
             <div className="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:scale-105 hover:translate-y-[-5px] bg-white">
               <img 
-                src="img/IMG-20240227-WA0011.jpg" 
+                src="/img/IMG-20240227-WA0011.jpg" 
                 alt="Bureau privé" 
                 className="w-full h-56 object-cover shine-effect"
               />
@@ -160,7 +160,7 @@ const Home = () => {
             
             <div className="rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-all duration-500 transform hover:scale-105 hover:translate-y-[-5px] bg-white">
               <img 
-                src="img/IMG-20240227-WA0012.jpgf_.jpg" 
+                src="/img/IMG-20240227-WA0012.jpgf_.jpg" 
                 alt="Salle de réunion" 
                 className="w-full h-56 object-cover shine-effect"
               />
