@@ -163,7 +163,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </Link>
       ))}
 
-      {loading ? (
+      {!loading ? (
         user?.rule === "client" ? (
           <Link
             to="/dashboard/booking"
@@ -192,7 +192,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </Link>
       )}
 
-          {loading && (
+          {!loading && (
               <button
                 onClick={() => {
                   logout();
