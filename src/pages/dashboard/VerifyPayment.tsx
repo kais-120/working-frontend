@@ -32,32 +32,6 @@ const VerifyPayment = () => {
   const [payment, setPayment] = useState(null);
   const [reference, setReference] = useState("");
 
-  // Mock payment data from your example
-  const mockPaymentData = {
-    "id": 2,
-    "booking_id": 6,
-    "references": "688687491275f7d9c3e57d57",
-    "amount": 25000,
-    "status": "pending",
-    "payment_date": "2025-07-27T20:08:41.000Z",
-    "bookingPayment": {
-      "id": 6,
-      "membership": "Abonné",
-      "date_start": "2025-07-31",
-      "time_start": "09:00:00",
-      "duration": "jour",
-      "number_person": null,
-      "createdAt": "2025-07-27T18:02:16.000Z",
-      "users": {
-        "id": 10,
-        "name": "adex",
-        "last_name": "Bennour",
-        "email": "akrambennour3@gmail.com",
-        "phone": "12345678"
-      }
-    }
-  };
-
   const handleScan = (result) => {
     if (result) {
       setError(false);
@@ -118,7 +92,7 @@ const VerifyPayment = () => {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto p-6 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen">
+    <div className="w-full max-w-2xl mx-auto p-6 bg-gradient-to-br from-gray-50 to-blue-50 min-h-screen animate-fade-in delay-100">
       <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
         {/* Header */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 p-6 text-white">

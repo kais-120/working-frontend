@@ -4,15 +4,13 @@ import { Menu, X, User, LogOut, ClipboardCheck } from 'lucide-react';
 import Cookies from 'universal-cookie';
 import { useUser } from '@/hooks/useUser';
 import logo from '@/Assets/img/Sans-titre-155.png'
-
-
+import ExpireDialog from '../ExpireDialog';
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const location = useLocation();
   const cookie = new Cookies();
-
   const menuRef = useRef<HTMLDivElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -20,6 +18,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     { name: 'Accueil', path: '/' },
     { name: 'À Propos', path: '/about' },
     { name: 'Adhésion', path: '/membership' },
+    { name: 'Actualités', path: '/news' },
     { name: 'Contact', path: '/contact' },
     { name: 'FAQ', path: '/faq' },
   ];
@@ -28,7 +27,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
 
 
- const {loading,user} = useUser();
+ const {loading,user,expire,setExpire,auth} = useUser();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -49,9 +48,14 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
     cookie.remove("auth")
     window.location.href = '/login';
   };
+  if(loading)
+    return <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      </div>
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ExpireDialog open={expire} setOpen={setExpire} />
       {/* Header */}
       <header className="bg-white shadow-md sticky top-0 z-50">
         <div className="container-custom flex justify-between items-center py-4">
@@ -82,7 +86,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               </Link>
             ))}
 
-{!loading ? (
+{auth ? (
   <div className="relative">
     <button
       onClick={() => setUserMenuOpen(!userMenuOpen)}

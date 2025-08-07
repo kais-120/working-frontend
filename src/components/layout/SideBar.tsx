@@ -1,4 +1,4 @@
-import { User, LayoutDashboard, Users, CalendarCheck, CreditCard, Star, BarChart3 } from "lucide-react";
+import { User, LayoutDashboard, Users, CalendarCheck, CreditCard, Star, BarChart3, Newspaper } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NavLink } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -23,6 +23,7 @@ export default function Sidebar() {
         : []),
       { link: "manger/booking", label: "Réservations", icon: <LayoutDashboard /> },
       { link: "verify-payment", label: "Vérification Paiement", icon: <CreditCard  /> },
+      { link: "news", label: "Actualités", icon: <Newspaper  /> },
       ...(user.rule === "admin"
         ? [{ link: "reviews", label: "Avis", icon: <Star /> }]
         : []),

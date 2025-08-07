@@ -4,10 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import { Check, Eye, X } from "lucide-react"
 import { useEffect, useState } from "react"
-import { AxiosToken } from "../API/Api"
+import { AxiosToken,SOCKET_URL } from "../API/Api"
 import BookingUserDetailsDialog from "@/components/BookingUserDetailsDialog"
 import Swal from 'sweetalert2'
 import { Input } from "@/components/ui/input"
+import { io } from "socket.io-client"
 
 
 const BookingManger = () => {
@@ -21,6 +22,10 @@ const BookingManger = () => {
       const [search,setSearch] = useState("");
       const [loading, setLoading] = useState(true)
       useEffect(() => {
+        const socket = io(SOCKET_URL);
+        socket.on("booking",()=>{
+          setChange(prev => prev + 1)
+        })
         if(search.trim().length > 0) return;
           AxiosToken.get(`/booking/all/${page}`).then((res) => {
             setBookings(res.data)
@@ -132,23 +137,66 @@ const BookingManger = () => {
   return (
      <div>
         <BookingUserDetailsDialog open={open} onOpenChange={setOpen} user={user} custom={custom} />
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 animate-fade-in delay-100">
         <div>
-          <h2 className="text-xl font-bold">Gestion des Réservations</h2>
-          <p className="text-sm text-gray-600">Gérer les comptes Réservations</p>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">Gestion des Réservations</h1>
+          <p className="text-gray-600 mt-2 text-lg">Gérer les comptes Réservations</p>
         </div>
       </div>
-        <Input value={search} onChange={(e)=>setSearch(e.target.value)} placeholder="rechercher on refrence de paiment"/>
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+          <Card className="animate-fade-in delay-100">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Total Réservations</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold"> {bookings.bookings.count}</div>
+            </CardContent>
+          </Card>
+          <Card className="animate-fade-in delay-100">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-yellow-600">En Attent</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold"> {bookings.pendingCount}</div>
+            </CardContent>
+          </Card>
+          
+          <Card className="animate-fade-in delay-200">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Approve</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-green-600">
+              {bookings.approveCount}
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="animate-fade-in delay-300">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm font-medium text-gray-600">Annuler</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-red-600">
+                {bookings.refuseCount}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+        <Input className="animate-fade-in delay-100" value={search} onChange={(e)=>setSearch(e.target.value)} placeholder="rechercher on refrence de paiment"/>
      <div className="mt-5">
         {filterBookings && filterBookings?.bookings?.count === 0 ? 
         <span className="text-center text-gray-500">Aucun Réservation trouvé</span>
         : filterBookings?.bookings?.rows.map((item)=>(
-        <Card key={item.id} className="w-full md:w-[75%] mb-3">
+        <Card key={item.id} className="w-full md:w-[75%] mb-3 animate-fade-in delay-100">
             <CardHeader>
                 <div className="flex flex-col md:flex-row justify-between gap-2">
                     <div className="flex items-center">
-                        <CardTitle className="me-2">{item.membership}</CardTitle>
-                        <Badge variant={item.status}>{item.status === "pending" ? "En Attend" : item.status === "accept" ? "Approve" : "refuse" }</Badge>
+                        <CardTitle className="me-2">{item.membership}
+
+                        </CardTitle>
+                        <Badge variant={item.status}>{item.status === "pending" ? "En Attend" : item.status === "accept" ? "Approve" : "refuse" }
+                        </Badge>
                     </div>
                     <div className="grid grid-cols-3">
                         {item.status === "pending" &&
@@ -180,6 +228,9 @@ const BookingManger = () => {
                 </div>
             </CardHeader>
             <CardContent>
+              {item?.is_new &&
+                <span className="bg-red-500 text-white text-[10px] px-2 py-[2px] ms-1 rounded-full uppercase">NOUVELLE</span>
+              }
     <div className="grid grid-cols-2 gap-y-1 text-sm">
       <span className="font-medium">Date de Réservations:</span>
       <span>{new Date(item.createdAt).toLocaleDateString("fr")}</span>
@@ -200,6 +251,12 @@ const BookingManger = () => {
 
       <span className="font-medium">Tarif:</span>
       <span>{item.price} TND</span>
+      {item.status === "accept" &&
+      <>
+        <span className="font-medium">Payment:</span>
+        <span>{item.payment_access  === "accept" ? "Termine" : "En Attent" }</span>
+      </>
+      }
 
     </div>
   </CardContent>

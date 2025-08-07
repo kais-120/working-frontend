@@ -84,7 +84,7 @@ if (loading) {
     );
   }
   return (
-    <div className="max-w-3xl mt-10 p-6 ">
+    <div className="max-w-3xl mt-10 p-6 animate-fade-in delay-100">
       <form onSubmit={formik.handleSubmit}>
       <div className='mb-8 w-full'>
         <h1 className='text-2xl font-bold mb-8'>Données personnelles</h1>

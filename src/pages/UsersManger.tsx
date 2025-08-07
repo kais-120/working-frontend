@@ -116,10 +116,10 @@ const UsersManager = () => {
   return (
     <div>
       <AddNewsOwner open={showAddDialog} onOpenChange={setShowAddDialog} onChange={setChange} />
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4 animate-fade-in delay-100">
         <div>
-          <h2 className="text-xl font-bold">Gestion des utilisateurs</h2>
-          <p className="text-sm text-gray-600">Gérer les comptes utilisateurs</p>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">Gestion des utilisateurs</h1>
+          <p className="text-gray-600 mt-2 text-lg">Gérer les comptes utilisateurs</p>
         </div>
         <Button
           className="bg-coworking-primary hover:bg-coworking-primary/90"
@@ -132,7 +132,7 @@ const UsersManager = () => {
 
       <div className="mb-4">
         <Input
-        className="w-full"
+        className="w-full animate-fade-in delay-100"
           name="search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -140,7 +140,7 @@ const UsersManager = () => {
         />
       </div>
 
-      <Table className="bg-white shadow-sm rounded-md min-w-[800px]">
+      <Table className="bg-white shadow-sm rounded-md min-w-[800px] animate-fade-in delay-100">
         <TableHeader>
           <TableRow>
             <TableHead>Name</TableHead>

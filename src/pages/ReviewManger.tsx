@@ -4,6 +4,7 @@ import { Check, Eye, Star, X } from "lucide-react"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import ReviewTextDialog from "@/components/ReviewTextDialog"
 import Swal from "sweetalert2"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 
 const ReviewManger = () => {
@@ -108,9 +109,53 @@ const ReviewManger = () => {
   }
   
   return (
-      <div className="bg-white rounded-lg  shadow overflow-hidden">
+      <div className="bg-white rounded-lg  shadow overflow-hidden animate-fade-in delay-100">
         <ReviewTextDialog onOpenChange={setOpen} open={open} review={review} />
           <div className="overflow-x-auto">
+             <div className="mb-8 animate-fade-in px-5">
+                      <div className="flex items-center justify-between">
+                        <div>
+                          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+                            Gestion des Avis
+                          </h1>
+                          <p className="text-gray-600 mt-2 text-lg">Gérez les Avis</p>
+                        </div>                   
+                      </div>
+                    </div>
+            
+                    {/* Stats Cards */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8  px-5">
+                      <Card className="animate-fade-in delay-100">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-sm font-medium text-gray-600">Total actualités</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold">3</div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="animate-fade-in delay-200">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-sm font-medium text-gray-600">Publiées</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold text-green-600">
+                          3
+                          </div>
+                        </CardContent>
+                      </Card>
+                      
+                      <Card className="animate-fade-in delay-300">
+                        <CardHeader className="pb-2">
+                          <CardTitle className="text-sm font-medium text-gray-600">Brouillons</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="text-2xl font-bold text-yellow-600">
+                            3
+                          </div>
+                        </CardContent>
+                      </Card>
+              </div>
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>

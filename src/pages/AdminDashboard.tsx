@@ -114,12 +114,12 @@ const AdminDashboard = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-6 animate-fade-in delay-100">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Tableau de bord - Analytics</h1>
-          <p className="text-gray-600">Analyse des données de réservation et performance</p>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">Tableau de bord - Analytics</h1>
+          <p className="text-gray-600 mt-2 text-lg">Analyse des données de réservation et performance</p>
         </div>
 
         {/* Stats Cards */}
@@ -150,7 +150,7 @@ const AdminDashboard = () => {
               <div className="text-3xl font-bold text-green-800">{stats?.booking?.totalBookings}</div>
               {
                 stats?.booking.bookingPercentageGrowth &&
-              <p className="text-xs text-green-600 mt-1">+{stats?.booking.bookingPercentageGrowth}% ce mois</p>
+              <p className="text-xs text-green-600 mt-1">+{(stats?.booking.bookingPercentageGrowth).toFixed(2)}% ce mois</p>
               }
             </CardContent>
           </Card>

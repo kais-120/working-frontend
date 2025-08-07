@@ -7,13 +7,14 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
-import { AxiosToken } from "../API/Api"
+import { AxiosToken,IMAGE_URL } from "../API/Api"
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover';
 import { fr } from 'date-fns/locale';
 import { format } from 'date-fns';
-import { Calendar } from 'lucide-react';
+import { Calendar, X } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Calendar as DatePicker } from '@/components/ui/calendar';
+import { useState } from 'react';
 
 
 const validationSchema = yup.object().shape({
@@ -21,7 +22,19 @@ const validationSchema = yup.object().shape({
   content:yup.string().required("content est requise"),
   category:yup.string().required("category est requise"),
   status:yup.string().required("status est requise"),
-  image:yup.mixed().required("image est requise"),
+  imageChange:yup.boolean(),
+  image: yup.mixed().nullable().test(
+  "image-required-if-deleted",
+  "L’image est requise",
+  function (value) {
+    const { imageChange, image_url } = this.parent;
+    if (imageChange && !value && !image_url) {
+      return this.createError({ message: "L’image est requise" });
+    }
+
+    return true;
+  }
+),
   date_start:yup.string().test("event-date", "La date est requise",function (value){
     const { category } = this.parent
     if((category === "Événements" || category === "Promotions")&& !value){
@@ -51,50 +64,60 @@ const validationSchema = yup.object().shape({
   }),
 })
 
-interface AddNewsDialogProps {
+interface UpdateNewsDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAddNews: (prev : any) => void;
+  news:{
+    id:number,
+    titre:string,
+    content:string,
+    category:string,
+    status:string,
+    image:string,
+    date_start:string,
+    time_start:string,
+    date_end:string,
+  }
 }
 
-const AddNewsDialog = ({ open, onOpenChange, onAddNews }: AddNewsDialogProps) => {
+const UpdateNewsDialog = ({ open, onOpenChange, onAddNews,news }: UpdateNewsDialogProps) => {
+  const [isEnter,setIsEnter] = useState(false);
   const formik = useFormik({
+    enableReinitialize:true,
     initialValues:{
-      title: '',
-      content: '',
-      category: '',
-      status: 'publish',
+      title: news?.titre || '',
+      content: news?.content || '',
+      category: news?.category || '',
+      status: news?.status || '',
       image:null,
-      date_start:"",
-      time_start:"",
-      date_end:"",
+      imageChange:false,
+      image_url:news?.image || '',
+      date_start:news?.date_start ||"",
+      time_start:news?.time_start || "",
+      date_end:news?.date_end ||"",
     },
     validationSchema,
-    onSubmit : async (values ,{ resetForm }) =>{
+    onSubmit : async (values) =>{
       const formData = new FormData();
       formData.append("titre",values.title)
       formData.append("content",values.content)
       formData.append("category",values.category)
       formData.append("status",values.status)
       formData.append("image",values.image)
+      formData.append("imageChange",values.imageChange)
       formData.append("date_start",values.date_start)
       formData.append("time_start",values.time_start)
       formData.append("date_end",values.date_end)
       try{
-        await AxiosToken.post('/news/add',formData);
+        await AxiosToken.put(`/news/update/${news.id}`,formData);
         onAddNews(prev => prev + 1)
         onOpenChange(false)
-         resetForm({
-        values: Object.fromEntries(
-        Object.keys(values).map(key => [key, null])
-    )
-  });
-      }catch{
-        console.error("errorr")
+      }catch(err){
+        console.error(err)
       }
     }
   })
-
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -331,12 +354,26 @@ const AddNewsDialog = ({ open, onOpenChange, onAddNews }: AddNewsDialogProps) =>
           </div>
 
            <div className="space-y-2">
-            <Label htmlFor="content">Contenu *</Label>
+            {!formik.values.image_url ?
+            <>
+            <Label htmlFor="content">image *</Label>
             <Input
              type='file'
              onChange={(e)=>formik.setFieldValue("image",e.target.files[0])}
             />
               <span className='mt-3 text-red-600'>{formik.touched.image && formik.errors.image}</span>
+            </> : 
+            <div>
+              <div onMouseEnter={()=>!isEnter && setIsEnter(true)} onMouseLeave={()=>isEnter && setIsEnter(false)} className='relative'>
+                {isEnter && 
+                <div onClick={()=>{isEnter && formik.setFieldValue("image_url",null);formik.setFieldValue("imageChange",true)}} className='absolute bg-black opacity-40 w-full h-full flex justify-center items-center cursor-pointer'>
+                  <X className=' text-white text-lg' />
+                </div>
+                }
+              <img src={`${IMAGE_URL}/${formik.values.image_url}`} alt='image' />
+              </div>
+            </div>
+            }
           </div>
 
           <div className="flex justify-end gap-3 pt-4">
@@ -357,4 +394,4 @@ const AddNewsDialog = ({ open, onOpenChange, onAddNews }: AddNewsDialogProps) =>
   );
 };
 
-export default AddNewsDialog;
+export default UpdateNewsDialog;

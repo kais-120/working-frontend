@@ -35,6 +35,8 @@ import ReviewManger from "./pages/ReviewManger";
 import Email from "./pages/dashboard/profile/Email";
 import Password from "./pages/dashboard/profile/Password";
 import VerifyPayment from "./pages/dashboard/VerifyPayment";
+import News from "./pages/News";
+import NewsManager from "./pages/dashboard/NewsManager";
 
 const queryClient = new QueryClient();
 
@@ -58,11 +60,13 @@ const App = () => (
             <Route path="/test" element={<BookingDashboard />} />
             <Route path="/payment/success" element={<PaymentSuccess />} />
             <Route path="/payment/fail" element={<PaymentDenied />} />
+            <Route path="/news" element={<Layout><News /> </Layout>} />
             <Route element={<AuthRole allowRole={["admin","owner","client"]} />}>
               <Route path="dashboard" element={<Dashboard />}>
                 <Route element={<AuthRole allowRole={["admin","owner"]} />}>
                   <Route index element={<AdminDashboard />} />
                   <Route path="manger/booking" element={<BookingManger />} />
+                  <Route path="news" element={<NewsManager />} />
                   <Route path="verify-payment" element={<VerifyPayment />} />
                 </Route>
                 <Route element={<AuthRole allowRole={["admin"]} />}>

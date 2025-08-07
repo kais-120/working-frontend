@@ -4,7 +4,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 
 import QRCode from "react-qr-code";
 import { Button } from './ui/button';
-import { pdf, PDFDownloadLink } from '@react-pdf/renderer';
+import { PDFDownloadLink } from '@react-pdf/renderer';
 import PaymentReceiptPDF from '@/pages/dashboard/client/PdfPayment';
 
 
@@ -39,7 +39,7 @@ const CodeQrDialog = ({ payment, onOpenChange, open }: ReviewDialogProps) => {
         <PDFDownloadLink
               document={<PaymentReceiptPDF payment={payment} />}
                 fileName={`Reçu Paiement-${payment?.users?.name}.pdf`}
-                                        className="btn btn-sm btn-outline-success px-3 rounded-pill"
+                        className="btn btn-sm btn-outline-success px-3 rounded-pill"
                         >
                         Télécharger le PDF
                         </PDFDownloadLink>

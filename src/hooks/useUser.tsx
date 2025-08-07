@@ -1,23 +1,32 @@
 import { useEffect, useState } from "react"
 import Cookies from "universal-cookie";
-import { AxiosToken } from "../API/Api"
+import { AxiosToken , SOCKET_URL } from "../API/Api"
 
 export const  useUser = () => {
     const [user,setUser] = useState([]);
-    const [error,setError] = useState(true);
+    const [auth,setAuth] = useState(false);
     const [loading,setLoading] = useState(true);
+    const [expire,setExpire] = useState(false);
     const cookie = new Cookies();
     const token = cookie.get("auth")
   useEffect(()=>{
-    if(!token) return
+    if(!token){
+      setLoading(false);
+      return
+    }
            AxiosToken.get("/auth/profile")
            .then((response)=>{
              setUser(response.data);
-             setError(false)
-           }).catch(()=>setError(true))
+             setAuth(true)
+             
+           }).catch((error)=>{
+            if(error.status === 403){
+              setExpire(true)
+            }
+          })
            .finally(()=>setLoading(false))
   },[token])
 
-  return  {user, error, loading} ;
+  return  {user, auth, loading, expire, setExpire} ;
 }
 

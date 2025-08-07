@@ -16,7 +16,7 @@ const PricingCard = ({ title, price, period, features, notIncluded, popular = fa
   const [membership,setMembership] = useState([])
   const navigate = useNavigate()
 
-  const { error} = useUser()
+  const {auth} = useUser()
   return (
    <div 
   ref={cardRef} 
@@ -91,7 +91,7 @@ const PricingCard = ({ title, price, period, features, notIncluded, popular = fa
 
     <Button
       onClick={() => {
-        if(!error){
+        if(auth){
           setOpen(true);
           setMembership(title);
         }

@@ -4,9 +4,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination"
 import { CreditCard, MessageSquareText, QrCode} from "lucide-react"
 import { useEffect, useState } from "react"
-import { AxiosToken } from "../API/Api"
+import { AxiosToken,SOCKET_URL } from "../API/Api"
 import ReviewDialog from "@/components/ReviewDialog"
 import CodeQrDialog from "@/components/CodeQrDialog"
+import { useUser } from "@/hooks/useUser"
+import { io } from "socket.io-client"
 
 
 const ClientBooking = () => {
@@ -15,12 +17,14 @@ const ClientBooking = () => {
     const [reviewOpen,setReviewOpen] = useState(false)
     const [codeQrOpen,setCodeQrOpen] = useState(false)
     const [payment,setPayment] = useState([])
-    const [loading,setLoading] = useState(true)
+    const [loadingPage,setLoadingPage] = useState(true)
+    const [change,setChange] = useState(0)
+    const {user,loading} = useUser()
     const date = new Date(Date.now() + 1000 * 60 * 60 * 24)
       useEffect(() => {
           AxiosToken.get(`/booking/me/${page}`).then((res) => setBookings(res.data))
-          .finally(()=>setLoading(false))
-        }, [page])
+          .finally(()=>setLoadingPage(false))
+        }, [page,change])
       
         const totalPages = bookings?.totalPage || 1
       
@@ -52,7 +56,20 @@ const ClientBooking = () => {
           }
           }
         }
-        if (loading) {
+      
+  useEffect(()=>{
+    if(!loading){
+      const socket = io(SOCKET_URL);
+      socket.on("connect",()=>{
+        console.log("user connect")
+        socket.emit("join-room", user?.id);
+      });
+      socket.on("booking-update",()=>{
+        setChange(prev => prev + 1)
+      })
+    }
+  },[loading])
+    if (loadingPage) {
           return (
             <div className="flex items-center justify-center min-h-screen">
               <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
@@ -62,7 +79,9 @@ const ClientBooking = () => {
   return (
      <div>
       <ReviewDialog open={reviewOpen} onOpenChange={setReviewOpen} />
+      {codeQrOpen &&
       <CodeQrDialog open={codeQrOpen} onOpenChange={setCodeQrOpen} payment={payment} />
+      }
       <div className="flex justify-between items-center mb-4">
         <div>
           <h2 className="text-xl font-bold">Mes Réservations</h2>
@@ -76,7 +95,7 @@ const ClientBooking = () => {
         bookings?.bookings?.rows.map((item)=>(
 
         
-        <Card key={item.id} className="w-full md:w-[75%] mb-3">
+        <Card key={item.id} className="w-full md:w-[75%] mb-3 animate-fade-in delay-100">
   <CardHeader>
     <div className="flex flex-col md:flex-row justify-between gap-2">
       <div className="flex items-center">
@@ -92,24 +111,24 @@ const ClientBooking = () => {
 
       {item.status === "accept" && (
         <div className="mt-2 md:mt-0 w-full md:w-auto">
-          <Button
-            className="bg-blue-500 hover:bg-blue-500/90 text-white w-full md:w-auto"
-            onClick={() => handlePayment(item.price, item.id, item.payment_access)}
-          >
             {item.payment_access === "pending" ? (
-              <>
-                <CreditCard className="me-2" />
-                Payer
-              </>
+              <Button
+                className="bg-blue-500 hover:bg-blue-500/90 text-white w-full md:w-auto"
+                onClick={() => handlePayment(item.price, item.id, item.payment_access)}>
+                    <CreditCard className="me-2" />
+                    Payer
+                  </Button>
             ) : (
-              <QrCode
-                onClick={() => {
+              <Button
+              className="bg-blue-500 hover:bg-blue-500/90 text-white w-full md:w-auto"
+              onClick={() => {
                   setCodeQrOpen(true);
                   setPayment(item);
                 }}
-              />
+              >
+              <QrCode/>
+              </Button>
             )}
-          </Button>
         </div>
       )}
     </div>

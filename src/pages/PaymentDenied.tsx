@@ -1,6 +1,6 @@
 import { Home, RefreshCw, XCircle } from 'lucide-react'
 import { useEffect, useState } from 'react'
-import { AxiosToken } from '../API/Api';
+import { Axios } from '../API/Api';
 import { useNavigate } from 'react-router-dom';
 
 const PaymentDenied = () => {
@@ -10,7 +10,7 @@ const PaymentDenied = () => {
     const ref = (search.substring((search.indexOf("=")) + 1))
   useEffect(()=>{
       try{
-        AxiosToken.put("/payment/verify",{
+        Axios.put("/payment/verify",{
           payment_id:ref
         })
       }catch{
@@ -20,6 +20,17 @@ const PaymentDenied = () => {
         setIsLoading(false)
       }
     },[ref]);
+    const handleReSend = async () => {
+      if(!ref){
+       navigate("/",{replace:true})
+      }
+      try{
+        const response = await Axios.post(`/payment/send/payment/${ref}`);
+        window.location.href = response.data.payUrl
+      }catch{
+        console.error("error")
+      }
+    }
      if(isLoading){
     return "loading ..."
   }
@@ -32,13 +43,7 @@ const PaymentDenied = () => {
           </div>
           
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Paiement Refusé</h1>
-          <p className="text-gray-600 mb-6">Nous n'avons pas pu traiter votre paiement pour le moment.</p>
-          
-          <div className="bg-red-50 border border-red-200 rounded-xl p-6 mb-8">
-            <h2 className="text-lg font-semibold text-red-800 mb-2">Raison du Refus</h2>
-            <p className="text-red-700">{}</p>
-          </div>
-          
+          <p className="text-gray-600 mb-6">Nous n'avons pas pu traiter votre paiement pour le moment.</p> 
           <div className="bg-gray-50 rounded-xl p-6 mb-8 text-left">
             <h3 className="text-lg font-semibold text-gray-900 mb-3">Ce que vous pouvez faire :</h3>
             <ul className="text-gray-600 space-y-2">
@@ -52,12 +57,14 @@ const PaymentDenied = () => {
           <div className="space-y-3">
             <button
               className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center"
+            onClick={handleReSend}
             >
               <RefreshCw className="w-5 h-5 mr-2" />
               Réessayer
             </button>
             
             <button
+            onClick={()=>navigate("/",{replace:true})}
               className="w-full bg-gray-600 hover:bg-gray-700 text-white font-semibold py-3 px-6 rounded-xl transition-colors duration-200 flex items-center justify-center"
             >
               <Home className="w-5 h-5 mr-2" />
