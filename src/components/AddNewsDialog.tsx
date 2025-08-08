@@ -14,6 +14,7 @@ import { format } from 'date-fns';
 import { Calendar } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Calendar as DatePicker } from '@/components/ui/calendar';
+import { useState } from 'react';
 
 
 const validationSchema = yup.object().shape({
@@ -22,7 +23,7 @@ const validationSchema = yup.object().shape({
   category:yup.string().required("category est requise"),
   status:yup.string().required("status est requise"),
   image:yup.mixed().required("image est requise"),
-  date_start:yup.string().test("event-date", "La date est requise",function (value){
+  date_start:yup.string().nullable().test("event-date", "La date est requise",function (value){
     const { category } = this.parent
     if((category === "Événements" || category === "Promotions")&& !value){
       return false
@@ -31,7 +32,7 @@ const validationSchema = yup.object().shape({
         return true
       }
   }),
-  time_start:yup.string().test("event-time", "La time est requise pour les événements",function (value){
+  time_start:yup.string().nullable().test("event-time", "La time est requise pour les événements",function (value){
     const { category } = this.parent
     if(category === "Événements" && !value){
       return false
@@ -40,7 +41,7 @@ const validationSchema = yup.object().shape({
         return true
       }
   }),
-  date_end:yup.string().test("promo-date", "La date est requise pour les Promotions",function (value){
+  date_end:yup.string().nullable().test("promo-date", "La date est requise pour les Promotions",function (value){
     const { category } = this.parent
     if(category === "Promotions" && !value){
       return false
@@ -58,6 +59,7 @@ interface AddNewsDialogProps {
 }
 
 const AddNewsDialog = ({ open, onOpenChange, onAddNews }: AddNewsDialogProps) => {
+  const [isSubmit,setIsSubmit] = useState(false)
   const formik = useFormik({
     initialValues:{
       title: '',
@@ -77,13 +79,21 @@ const AddNewsDialog = ({ open, onOpenChange, onAddNews }: AddNewsDialogProps) =>
       formData.append("category",values.category)
       formData.append("status",values.status)
       formData.append("image",values.image)
-      formData.append("date_start",values.date_start)
-      formData.append("time_start",values.time_start)
-      formData.append("date_end",values.date_end)
+      if (values.date_start) {
+        formData.append("date_start", values.date_start);
+      }
+      if (values.time_start) {
+        formData.append("time_start", values.time_start);
+      }
+      if (values.date_end) {
+        formData.append("date_end", values.date_end);
+      }
+
       try{
+        setIsSubmit(true)
         await AxiosToken.post('/news/add',formData);
         onAddNews(prev => prev + 1)
-        onOpenChange(false)
+        onOpenChange(false);
          resetForm({
         values: Object.fromEntries(
         Object.keys(values).map(key => [key, null])
@@ -94,7 +104,7 @@ const AddNewsDialog = ({ open, onOpenChange, onAddNews }: AddNewsDialogProps) =>
       }
     }
   })
-
+  console.log(isSubmit)
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -347,8 +357,19 @@ const AddNewsDialog = ({ open, onOpenChange, onAddNews }: AddNewsDialogProps) =>
             >
               Annuler
             </Button>
-            <Button type="submit" className="bg-green-600 hover:bg-green-700">
-              Créer l'actualité
+            <Button disabled={isSubmit} type="submit" className="bg-green-600 hover:bg-green-700">
+             {isSubmit ? (
+                  <>
+                    <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Créer en cours...
+                  </>
+                ) : (
+                  "Créer l'actualité"
+                )}
+              
             </Button>
           </div>
         </form>
